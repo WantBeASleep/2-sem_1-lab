@@ -6,7 +6,7 @@
 
 
 // date block
-struct ringInfo
+struct RingInfo
 {
     void* zero;
     void* one;
@@ -18,7 +18,7 @@ struct ringInfo
 
 struct Vector3
 {
-    struct ringInfo* ringInfo;
+    struct RingInfo* ringinfo;
     void *x;
     void *y;
     void *z;
@@ -26,7 +26,7 @@ struct Vector3
 
 //func
 
-struct ringInfo* Create(
+struct RingInfo* Create(
     void* zero,
     void* one,
     void* (*module)(struct Vector3*),
@@ -34,62 +34,62 @@ struct ringInfo* Create(
     void* (*minus)(void*, void*),
     void* (*scalar)(struct Vector3*, struct Vector3*))
 {
-    struct ringInfo* ringInfo = (struct ringInfo*)malloc(sizeof(struct ringInfo));
-    ringInfo->zero = zero;
-    ringInfo->one = one;
-    ringInfo->module = module;
-    ringInfo->sum = sum;
-    ringInfo->minus = minus;
-    ringInfo->scalar = scalar;
+    struct RingInfo* ringinfo = (struct RingInfo*)malloc(sizeof(struct RingInfo));
+    ringinfo->zero = zero;
+    ringinfo->one = one;
+    ringinfo->module = module;
+    ringinfo->sum = sum;
+    ringinfo->minus = minus;
+    ringinfo->scalar = scalar;
 
-    return ringInfo;
+    return ringinfo;
 }
 
 //Create block
 struct Vector3* vector_zero;
 
-struct Vector3* Zero(struct ringInfo* ringInfo)
+struct Vector3* Zero(struct RingInfo* ringinfo)
 {
     if (vector_zero) return vector_zero;
 
     vector_zero = (struct Vector3*)malloc(sizeof(struct Vector3));
-    vector_zero->ringInfo = ringInfo;
-    vector_zero->x = ringInfo->zero;
-    vector_zero->y = ringInfo->zero;
-    vector_zero->z = ringInfo->zero;
+    vector_zero->ringinfo = ringinfo;
+    vector_zero->x = ringinfo->zero;
+    vector_zero->y = ringinfo->zero;
+    vector_zero->z = ringinfo->zero;
 
     return vector_zero;
 }
 
-struct Vector3* E_1(struct ringInfo* ringInfo)
+struct Vector3* E_1(struct RingInfo* ringinfo)
 {
     struct Vector3* vector = (struct Vector3*)malloc(sizeof(struct Vector3));
-    vector->ringInfo = ringInfo;
-    vector->x = ringInfo->one;
-    vector->y = ringInfo->zero;
-    vector->z = ringInfo->zero;
+    vector->ringinfo = ringinfo;
+    vector->x = ringinfo->one;
+    vector->y = ringinfo->zero;
+    vector->z = ringinfo->zero;
 
     return vector;
 }
 
-struct Vector3* E_2(struct ringInfo* ringInfo)
+struct Vector3* E_2(struct RingInfo* ringinfo)
 {
     struct Vector3* vector = (struct Vector3*)malloc(sizeof(struct Vector3));
-    vector->ringInfo = ringInfo;
-    vector->x = ringInfo->zero;
-    vector->y = ringInfo->one;
-    vector->z = ringInfo->zero;
+    vector->ringinfo = ringinfo;
+    vector->x = ringinfo->zero;
+    vector->y = ringinfo->one;
+    vector->z = ringinfo->zero;
 
     return vector;
 }
 
-struct Vector3* E_3(struct ringInfo* ringInfo)
+struct Vector3* E_3(struct RingInfo* ringinfo)
 {
     struct Vector3* vector = (struct Vector3*)malloc(sizeof(struct Vector3));
-    vector->ringInfo = ringInfo;
-    vector->x = ringInfo->zero;
-    vector->y = ringInfo->zero;
-    vector->z = ringInfo->one;
+    vector->ringinfo = ringinfo;
+    vector->x = ringinfo->zero;
+    vector->y = ringinfo->zero;
+    vector->z = ringinfo->one;
 
     return vector;
 }
@@ -107,7 +107,7 @@ struct Vector3* E_3(struct ringInfo* ringInfo)
 очев решение - изначально хранить массив в указателях - ебанизм и онанизм,
 и если второе мы поддерживаем, то первого мне хватает на
 */
-// struct Vector3* VectorFrom(struct ringInfo* ringInfo, void* values)
+// struct Vector3* VectorFrom(struct RingInfo* ringinfo, void* values)
 // {
     
 // }
@@ -131,17 +131,17 @@ void* GetZ(struct Vector3* vector)
 //unar operation block
 void* VectorModule(struct Vector3* vector)
 {
-    return vector->ringInfo->module(vector);
+    return vector->ringinfo->module(vector);
 }
 
 //binar operation block
 struct Vector3* Sum(struct Vector3* v1, struct Vector3* v2)
 {
     struct Vector3* result = (struct Vector3 *)malloc(sizeof(struct Vector3));
-    result->ringInfo = v1->ringInfo;
-    result->x = result->ringInfo->sum(v1->x, v2->x);
-    result->y = result->ringInfo->sum(v1->y, v2->y);
-    result->z = result->ringInfo->sum(v1->z, v2->z);
+    result->ringinfo = v1->ringinfo;
+    result->x = result->ringinfo->sum(v1->x, v2->x);
+    result->y = result->ringinfo->sum(v1->y, v2->y);
+    result->z = result->ringinfo->sum(v1->z, v2->z);
 
     return result;
 }
@@ -149,15 +149,15 @@ struct Vector3* Sum(struct Vector3* v1, struct Vector3* v2)
 struct Vector3* Minus(struct Vector3* v1, struct Vector3* v2)
 {
     struct Vector3* result = (struct Vector3 *)malloc(sizeof(struct Vector3));
-    result->ringInfo = v1->ringInfo;
-    result->x = result->ringInfo->minus(v1->x, v2->x);
-    result->y = result->ringInfo->minus(v1->y, v2->y);
-    result->z = result->ringInfo->minus(v1->z, v2->z);
+    result->ringinfo = v1->ringinfo;
+    result->x = result->ringinfo->minus(v1->x, v2->x);
+    result->y = result->ringinfo->minus(v1->y, v2->y);
+    result->z = result->ringinfo->minus(v1->z, v2->z);
 
     return result;
 }
 
 void* Scalar(struct Vector3* v1, struct Vector3* v2)
 {
-    return v1->ringInfo->scalar(v1, v2);
+    return v1->ringinfo->scalar(v1, v2);
 }

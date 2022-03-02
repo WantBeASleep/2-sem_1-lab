@@ -4,7 +4,7 @@ struct Vector3;
 
 //funcs
 
-struct ringInfo* Create(
+struct RingInfo* Create(
     void* zero,
     void* one,
     void* (*module)(struct Vector3*),
@@ -14,11 +14,11 @@ struct ringInfo* Create(
 
 //Vector create
 
-struct Vector3* Zero(struct ringInfo*);
-struct Vector3* E_1(struct ringInfo*);
-struct Vector3* E_2(struct ringInfo*);
-struct Vector3* E_3(struct ringInfo*);
-// struct Vector3* VectorFrom(struct ringInfo*, void*);
+struct Vector3* Zero(struct RingInfo*);
+struct Vector3* E_1(struct RingInfo*);
+struct Vector3* E_2(struct RingInfo*);
+struct Vector3* E_3(struct RingInfo*);
+// struct Vector3* VectorFrom(struct RingInfo*, void*);
 
 //decomposition
 
