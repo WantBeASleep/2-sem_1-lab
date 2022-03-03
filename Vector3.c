@@ -10,10 +10,9 @@ struct RingInfo
 {
     void* zero;
     void* one;
-    void* (*module)(struct Vector3*);
     void* (*sum)(void*, void*);
     void* (*minus)(void*, void*);
-    void* (*scalar)(struct Vector3*, struct Vector3*);
+    // void* (*scalar)(struct Vector3*, struct Vector3*);
 };
 
 struct Vector3
@@ -29,18 +28,16 @@ struct Vector3
 struct RingInfo* Create(
     void* zero,
     void* one,
-    void* (*module)(struct Vector3*),
     void* (*sum)(void*, void*),
-    void* (*minus)(void*, void*),
-    void* (*scalar)(struct Vector3*, struct Vector3*))
+    void* (*minus)(void*, void*))
+    // void* (*scalar)(struct Vector3*, struct Vector3*))
 {
     struct RingInfo* ringinfo = (struct RingInfo*)malloc(sizeof(struct RingInfo));
     ringinfo->zero = zero;
     ringinfo->one = one;
-    ringinfo->module = module;
     ringinfo->sum = sum;
     ringinfo->minus = minus;
-    ringinfo->scalar = scalar;
+    // ringinfo->scalar = scalar;
 
     return ringinfo;
 }
@@ -94,23 +91,17 @@ struct Vector3* E_3(struct RingInfo* ringinfo)
     return vector;
 }
 
-/*??? 
-в любом случае нужно брать из массива данные и преобразовывать их,
-преобразовывать явно, значит нужны типы и на войд`ах ничего не выйдет 
-- тупик одним словом
+struct Vector3* VectorFrom(struct RingInfo* ringinfo, void** values)
+{
+    struct Vector3* vector = (struct Vector3*)malloc(sizeof(struct Vector3));
+    vector->ringinfo = ringinfo;
+    vector->x = values[0];
+    vector->y = values[1];
+    vector->z = values[2];
 
-если вкратце:
-приходит значение int/float - не ебет
-создаем указатель этого типа, значение вписываем из массива
-передаем в структуру этот указатль преобразованный в void
+    return vector;
+}
 
-очев решение - изначально хранить массив в указателях - ебанизм и онанизм,
-и если второе мы поддерживаем, то первого мне хватает на
-*/
-// struct Vector3* VectorFrom(struct RingInfo* ringinfo, void* values)
-// {
-    
-// }
 
 //decomposition
 void* GetX(struct Vector3* vector)
@@ -120,19 +111,14 @@ void* GetX(struct Vector3* vector)
 
 void* GetY(struct Vector3* vector)
 {
-    return vector->x;
+    return vector->y;
 }
 
 void* GetZ(struct Vector3* vector)
 {
-    return vector->x;
+    return vector->z;
 }
 
-//unar operation block
-void* VectorModule(struct Vector3* vector)
-{
-    return vector->ringinfo->module(vector);
-}
 
 //binar operation block
 struct Vector3* Sum(struct Vector3* v1, struct Vector3* v2)
@@ -157,7 +143,7 @@ struct Vector3* Minus(struct Vector3* v1, struct Vector3* v2)
     return result;
 }
 
-void* Scalar(struct Vector3* v1, struct Vector3* v2)
-{
-    return v1->ringinfo->scalar(v1, v2);
-}
+// void* Scalar(struct Vector3* v1, struct Vector3* v2)
+// {
+//     return v1->ringinfo->scalar(v1, v2);
+// }

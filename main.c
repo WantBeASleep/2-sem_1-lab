@@ -1,175 +1,325 @@
 #include "Vector3.h"
 #include "intVector3.h"
-#include "secret.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-void intMenu();
+void menuOperator(struct Vector3**, int);
+int mainMenu();
+void vectorActionsMenu(struct Vector3**, int);
+void determinateMenu(struct Vector3**, int);
+void GetComponentMenu(struct Vector3**, int);
+void binarOperationMenu(struct Vector3**, int);
+void OutPutMenu(struct Vector3**, int);
+
+void OutPutVector(struct Vector3*);
+
+struct RingInfo* ringinfo;
+void** (*parseModule)();
+void (*outputStream)(void*);
+/*
+для парса int или float нужно работать с типами, 
+но функция по запихиванию данных в вектор должна быть универсальной,
+значит делаем костыль:
+struct Vector3* VectorFrom(struct RingInfo*, void**);
+принимает на вход массив войд указателей на войд
+а этот массив мы формируем из типов в типизированных функциях
+пишем IntParse() в intVector3.c, 
+создаем parsemodule который будет меняться в зависимости от типа
+получаем функцию которая генерит массив void**(IntParse) и общую функцию VectorFrom.
+*/
+
 
 int main()
 {
+    printf("count of operation object?\n");
+    int counter;
+    scanf("%d", &counter);
+
+    struct Vector3** data = (struct Vector3**)malloc(counter * sizeof(struct Vector3*));
+
     printf("-Type?\n\t--int: 1\n\t--float: 2\n");
     int choose;
     scanf("%d", &choose);
-    if (choose == 1)
+    switch (choose)
     {
-        intMenu();
-    } else {
-        //float
+        case 1:
+        {
+            //int
+            parseModule = IntParse;
+            outputStream = IntOutputStream;
+            intConst();
+            ringinfo = Create((void*)zeroInt, (void*)oneInt, &sumInt, &minusInt);
+            break;
+        }
+        case 2:
+        {
+            //float
+            break;
+        }
+        default:
+        {
+            return 0;
+            break;
+        }
     }
+
+    menuOperator(data, counter);
+    
     return 0;
 }
 
-void intMenu()
+void menuOperator(struct Vector3** data, int counter)
 {
-    intConst(); // задать интовые 0 и 1-цы
-    struct Vector3** data = (struct Vector3**)malloc(2 * sizeof(struct Vector3*));
-
-    struct RingInfo* ringinfo;
-    ringinfo = Create((void*)zeroInt, (void*)oneInt, &moduleInt, &sumInt, &minusInt, &scalarInt);
-
     for(;;)
     {
-        printf("\t-Int Mode-\n");
-        printf("-v1:\n");
-        printf("\t--determinate as 0, E1, E2, E3, From Value: 0, 1, 2, 3, 4\n");
-        printf("\t--GetX (5), GetY (6), GetZ (7)\n");
-        printf("\t--Module(?)(8)\n");
-        printf("-v2:\n");
-        printf("\t--determinate as 0, E1, E2, E3, From Value: 9, 10, 11, 12, 13\n");
-        printf("\t--GetX (14), GetY (15), GetZ (16)\n");
-        printf("\t--Module(?)(17)\n");
-        printf("-operations:\n");
-        printf("\t--sum (18), minus(19), scalar(20)");
-        printf("output data - 21");
-        int choose;
-        scanf("%d", &choose);
-
-        switch (choose)
+        int mainMenuChoose = mainMenu();
+        switch (mainMenuChoose)
         {
-            case 0:
-            {
-                data[0] = Zero(ringinfo);
-                break;
-            }
             case 1:
-            {   
-                data[0] = E_1(ringinfo);
+            {
+                vectorActionsMenu(data, counter);
                 break;
             }
             case 2:
-            {   
-                data[0] = E_2(ringinfo);
+            {
+                binarOperationMenu(data, counter);
                 break;
             }
             case 3:
-            {   
-                data[0] = E_3(ringinfo);
-                break;
-            }
-            case 4:
             {
-                int values[3];
-                for(int i=0; i<3; i++)
-                {
-                    printf("%d component - ", i);
-                    scanf("%d", &(values[i]));
-                }
-                data[0] = VectorFromInt(ringinfo, values);
+                OutPutMenu(data, counter);
                 break;
             }
-            case 5:
+            default:
             {
-                printf("GetX(v1) - %d\n", *(int*)(GetX(data[0])));
-                break;
-            }
-            case 6:
-            {
-                printf("GetX(v1) - %d\n", *(int*)(GetX(data[0])));
-                break;
-            }
-            case 7:
-            {
-                printf("GetX(v1) - %d\n", *(int*)(GetX(data[0])));
-                break;
-            }
-
-            case 9:
-            {
-                data[1] = Zero(ringinfo);
-                break;
-            }
-            case 10:
-            {   
-                data[1] = E_1(ringinfo);
-                break;
-            }
-            case 11:
-            {   
-                data[1] = E_2(ringinfo);
-                break;
-            }
-            case 12:
-            {   
-                data[1] = E_3(ringinfo);
-                break;
-            }
-            case 13:
-            {
-                int values[3];
-                for(int i=0; i<3; i++)
-                {
-                    printf("%d component - ", i);
-                    scanf("%d", &(values[i]));
-                }
-                data[1] = VectorFromInt(ringinfo, values);
-                break;
-            }
-            case 14:
-            {
-                printf("GetX(v2) - %d\n", *(int*)(GetX(data[1])));
-                break;
-            }
-            case 15:
-            {
-                printf("GetY(v2) - %d\n", *(int*)(GetY(data[1])));
-                break;
-            }
-            case 16:
-            {
-                printf("GetZ(v2) - %d\n", *(int*)(GetZ(data[1])));
-                break;
-            }
-            case 18:
-            {
-                OutputInt(Sum(data[0], data[1]));
-                break;
-            }
-            case 19:
-            {
-                OutputInt(Minus(data[0], data[1]));
-                break;
-            }
-            case 20:
-            {
-                printf("scalar(v1,v2) - %d", *(int*)Scalar(data[0], data[1]));
-                break;
-            }
-            case 21:
-            {
-                printf("v1\n");
-                OutputInt(data[0]);
-                printf("v2\n");
-                OutputInt(data[1]);
-                break;
-            }
-            case 22:
-            {
-                exit(0);
+                return;
                 break;
             }
         }
     }
+}
+
+int mainMenu()
+{
+    printf("\t-Main Menu-\n");
+    printf("1) vector actions\n");
+    printf("2) binar operations\n");
+    printf("3) Output vector\n");
+    int choose;
+    scanf("%d", &choose);
+    return choose;
+}
+
+void vectorActionsMenu(struct Vector3** data, int counter)
+{
+    printf("\t-Vector Actions Menu-\n");
+    printf("1) determinate new value\n");
+    printf("2) Get component\n");
+    int choose;
+    scanf("%d", &choose);
+    switch (choose)
+    {
+        case 1:
+        {
+            determinateMenu(data, counter);
+            break;
+        }
+        case 2:
+        {
+            GetComponentMenu(data, counter);
+            break;
+        }
+        default :
+        {
+            return;
+            break;
+        }
+    }
+    return;
+}
+
+void determinateMenu(struct Vector3** data, int counter)
+{
+    printf("Enter vector number (1-%d)\n", counter);
+    int vectorNumber;
+    scanf("%d", &vectorNumber);
+    vectorNumber--;
+
+    printf("\t-Determinate Menu\n");
+    printf("0) Zero vector\n");
+    printf("1) E_1 vector\n");
+    printf("2) E_2 vector\n");
+    printf("3) E_3 vector\n");
+    printf("4) From value vector\n");
+    int determinateChoose;
+    scanf("%d", &determinateChoose);
+    
+    switch (determinateChoose)
+    {
+        case 0:
+        {
+            data[vectorNumber] = Zero(ringinfo);
+            break;
+        }
+        case 1:
+        {
+            data[vectorNumber] = E_1(ringinfo);
+            break;
+        }
+        case 2:
+        {
+            data[vectorNumber] = E_2(ringinfo);
+            break;
+        }
+        case 3:
+        {
+            data[vectorNumber] = E_3(ringinfo);
+            break;
+        }
+        case 4:
+        {
+            data[vectorNumber] = VectorFrom(ringinfo, parseModule());
+            break;
+        }
+        default:
+        {
+            return;
+            break;
+        }
+    }
+    return;
+}
+
+void GetComponentMenu(struct Vector3** data, int counter)
+{
+    printf("Enter vector number (1-%d)\n", counter);
+    int vectorNumber;
+    scanf("%d", &vectorNumber);
+    vectorNumber--;
+
+    printf("\t-Get component Menu\n");
+    printf("1) Get X component\n");
+    printf("2) Get Y component\n");
+    printf("3) Get Z component\n");
+    int componentChoose;
+    scanf("%d", &componentChoose);
+
+    switch (componentChoose)
+    {
+        case 1:
+        {
+            printf("X component of %d vector - ", vectorNumber+1);
+            outputStream(GetX(data[vectorNumber]));
+            printf("\n");
+            break;
+        }
+        case 2:
+        {
+            printf("X component of %d vector - ", vectorNumber+1);
+            outputStream(GetY(data[vectorNumber]));
+            printf("\n");
+            break;
+        }
+        case 3:
+        {
+            printf("X component of %d vector - ", vectorNumber+1);
+            outputStream(GetZ(data[vectorNumber]));
+            printf("\n");
+            break;
+        }
+        default:
+        {
+            return;
+            break;
+        }
+    }
+
+    return;
+}
+
+void binarOperationMenu(struct Vector3** data, int counter)
+{
+    printf("\t-Binar Operation Menu-\n");
+    printf("1) Sum vectors\n");
+    printf("2) Minus vectors\n");
+    printf("3) Scalar vectors\n");
+    int choose;
+    scanf("%d", &choose);
+
+    switch (choose)
+    {
+        case 1:
+        {
+            printf("Enter 2 vectors numbers (1-%d)", counter);
+            int v1_number, v2_number;
+            scanf("%d %d", &v1_number, &v2_number);
+            v1_number--;
+            v2_number--;
+
+            struct Vector3* res;
+            res = Sum(data[v1_number], data[v2_number]);
+            OutPutVector(res);
+
+            printf("Save result?\n 0 - No\n Number Vector to save -");
+            int saveVector;
+            scanf("%d", &saveVector);
+            if (!saveVector) break;
+            saveVector--;
+            data[saveVector] = res;
+
+            break;
+        }
+        case 2:
+        {
+            printf("Enter 2 vectors numbers (1-%d)", counter);
+            int v1_number, v2_number;
+            scanf("%d %d", &v1_number, &v2_number);
+            v1_number--;
+            v2_number--;
+
+            struct Vector3* res;
+            res = Minus(data[v1_number], data[v2_number]);
+            OutPutVector(res);
+
+            printf("Save result?\n 0 - No\n Number Vector to save -");
+            int saveVector;
+            scanf("%d", &saveVector);
+            if (!saveVector) break;
+            saveVector--;
+            data[saveVector] = res;
+            
+            break;
+        }
+        case 3:
+        {
+            break;
+        }
+    }
+
+    return;
+}
+
+void OutPutMenu(struct Vector3** data, int counter)
+{
+    printf("\t-Output Menu-\n");
+    printf("Enter the number of vector (1-%d)\n", counter);
+    int number;
+    scanf("%d", &number);
+    number--;
+    OutPutVector(data[number]);
+    return;
+}
+
+void OutPutVector(struct Vector3* vector)
+{
+    printf("vector output\n");
+    printf("\t-");
+    outputStream(GetX(vector));
+    printf("\n\t-");
+    outputStream(GetY(vector));
+    printf("\n\t-");
+    outputStream(GetZ(vector));
+    printf("\n");
 
     return;
 }
