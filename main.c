@@ -1,5 +1,6 @@
 #include "Vector3.h"
 #include "intVector3.h"
+#include "doubleVector3.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -37,7 +38,7 @@ int main()
 
     struct Vector3** data = (struct Vector3**)malloc(counter * sizeof(struct Vector3*));
 
-    printf("-Type?\n\t--int: 1\n\t--float: 2\n");
+    printf("-Type?\n\t--int: 1\n\t--double: 2\n");
     int choose;
     scanf("%d", &choose);
     switch (choose)
@@ -48,12 +49,16 @@ int main()
             parseModule = IntParse;
             outputStream = IntOutputStream;
             intConst();
-            ringinfo = Create((void*)zeroInt, (void*)oneInt, &sumInt, &minusInt);
+            ringinfo = Create(sizeInt, (void*)zeroInt, (void*)oneInt, &sumInt, &minusInt, &scalarInt);
             break;
         }
         case 2:
         {
-            //float
+            //double
+            parseModule = DoubleParse;
+            outputStream = DoubleOutputStream;
+            doubleConst();
+            ringinfo = Create(sizeDouble, (void*)zeroDouble, (void*)oneDouble, &sumDouble, &minusDouble, &scalarDouble);
             break;
         }
         default:
@@ -292,6 +297,16 @@ void binarOperationMenu(struct Vector3** data, int counter)
         }
         case 3:
         {
+            printf("Enter 2 vectors numbers (1-%d)", counter);
+            int v1_number, v2_number;
+            scanf("%d %d", &v1_number, &v2_number);
+            v1_number--;
+            v2_number--;
+
+            printf("Scalar of vectors = ");;
+            outputStream(Scalar(data[v1_number], data[v2_number]));
+            printf("\n");
+
             break;
         }
     }

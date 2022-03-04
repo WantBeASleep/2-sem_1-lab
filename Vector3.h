@@ -1,3 +1,5 @@
+#include <string.h>
+
 //structs
 struct RingInfo;
 struct Vector3;
@@ -5,11 +7,12 @@ struct Vector3;
 //funcs
 
 struct RingInfo* Create(
+    size_t size,
     void* zero,
     void* one,
     void* (*sum)(void*, void*),
-    void* (*minus)(void*, void*));
-    // void* (*scalar)(struct Vector3*, struct Vector3*));
+    void* (*minus)(void*, void*),
+    void* (*scalar)(void**, void**));
 
 //Vector create
 

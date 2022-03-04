@@ -1,15 +1,13 @@
-struct RingInfo;
-struct Vector3;
+#include <string.h>
 
 //ring
 void intConst();
-
+size_t sizeInt;
 int* zeroInt;
 int* oneInt;
-void *moduleInt(struct Vector3*);
 void *sumInt(void*, void*);
 void *minusInt(void*, void*);
-// void *scalarInt(struct Vector3*, struct Vector3*);
+void *scalarInt(void**, void**);
 
 //input/output
 void **IntParse();

@@ -1,18 +1,19 @@
 #include "Vector3.h"
 
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
 #include <stdio.h>
 
 
 // date block
 struct RingInfo
 {
+    size_t size;
     void* zero;
     void* one;
     void* (*sum)(void*, void*);
     void* (*minus)(void*, void*);
-    // void* (*scalar)(struct Vector3*, struct Vector3*);
+    void* (*scalar)(void**, void**);
 };
 
 struct Vector3
@@ -26,18 +27,20 @@ struct Vector3
 //func
 
 struct RingInfo* Create(
+    size_t size,
     void* zero,
     void* one,
     void* (*sum)(void*, void*),
-    void* (*minus)(void*, void*))
-    // void* (*scalar)(struct Vector3*, struct Vector3*))
+    void* (*minus)(void*, void*),
+    void* (*scalar)(void**, void**))
 {
     struct RingInfo* ringinfo = (struct RingInfo*)malloc(sizeof(struct RingInfo));
+    ringinfo->size = size;
     ringinfo->zero = zero;
     ringinfo->one = one;
     ringinfo->sum = sum;
     ringinfo->minus = minus;
-    // ringinfo->scalar = scalar;
+    ringinfo->scalar = scalar;
 
     return ringinfo;
 }
@@ -143,7 +146,18 @@ struct Vector3* Minus(struct Vector3* v1, struct Vector3* v2)
     return result;
 }
 
-// void* Scalar(struct Vector3* v1, struct Vector3* v2)
-// {
-//     return v1->ringinfo->scalar(v1, v2);
-// }
+void* Scalar(struct Vector3* v1, struct Vector3* v2)
+{
+    void** v1_values = (void**)malloc(3 * sizeof(v1->ringinfo->size));
+    void** v2_values = (void**)malloc(3 * sizeof(v2->ringinfo->size));
+
+    v1_values[0] = v1->x;
+    v1_values[1] = v1->y;
+    v1_values[2] = v1->z;
+
+    v2_values[0] = v2->x;
+    v2_values[1] = v2->y;
+    v2_values[2] = v2->z;
+
+    return v1->ringinfo->scalar(v1_values, v2_values);
+}

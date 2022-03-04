@@ -1,14 +1,16 @@
 #include "Vector3.h"
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 //ringinfo buddy
-
+size_t sizeInt;
 int* zeroInt;
 int* oneInt;
 
 void intConst()
 {
+    sizeInt = sizeof(int*);
     zeroInt = (int*)malloc(sizeof(int));
     oneInt = (int*)malloc(sizeof(int));
 
@@ -40,21 +42,17 @@ void *minusInt(void *a1, void *a2)
     return (void*)res;
 }
 
-// void *scalarInt(struct Vector3 *v1, struct Vector3 *v2)
-// {
-//     int* res = (int*)malloc(sizeof(int));
-//     *res = 0;
+void *scalarInt(void **v1_values, void **v2_values)
+{
+    int *res = (int*)malloc(sizeof(int));
+    *res = 0;
+    for (int i=0; i<3; i++)
+    {
+        *res += *(int*)(v1_values[i]) * *(int*)(v2_values[i]);
+    }
 
-//     int valuesV1[3] = {*(int*)(v1->x), *(int*)(v1->y), *(int*)(v1->z)};
-//     int valuesV2[3] = {*(int*)(v2->x), *(int*)(v2->y), *(int*)(v2->z)};
-
-//     for(int i=0; i<3; i++)
-//     {
-//         *res+= valuesV1[i] * valuesV2[i];
-//     }
-
-//     return (void*)res;
-// }
+    return (void*)res;
+}
 
 void **IntParse()
 {
