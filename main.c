@@ -11,11 +11,13 @@ void determinateMenu(struct Vector3**, int);
 void GetComponentMenu(struct Vector3**, int);
 void binarOperationMenu(struct Vector3**, int);
 void OutPutMenu(struct Vector3**, int);
-
 void OutPutVector(struct Vector3*);
+
+void moduleTesting(struct Vector3**);
 
 struct RingInfo* ringinfo;
 void** (*parseModule)();
+void** (*testModule)();
 void (*outputStream)(void*);
 /*
 для парса int или float нужно работать с типами, 
@@ -47,6 +49,7 @@ int main()
         {
             //int
             parseModule = IntParse;
+            testModule = IntTests;
             outputStream = IntOutputStream;
             intConst();
             ringinfo = Create(sizeInt, (void*)zeroInt, (void*)oneInt, &sumInt, &minusInt, &scalarInt);
@@ -56,6 +59,7 @@ int main()
         {
             //double
             parseModule = DoubleParse;
+            testModule = DoubleTests;
             outputStream = DoubleOutputStream;
             doubleConst();
             ringinfo = Create(sizeDouble, (void*)zeroDouble, (void*)oneDouble, &sumDouble, &minusDouble, &scalarDouble);
@@ -95,6 +99,11 @@ void menuOperator(struct Vector3** data, int counter)
                 OutPutMenu(data, counter);
                 break;
             }
+            case 4:
+            {
+                moduleTesting(data);
+                break;
+            }
             default:
             {
                 return;
@@ -110,6 +119,7 @@ int mainMenu()
     printf("1) vector actions\n");
     printf("2) binar operations\n");
     printf("3) Output vector\n");
+    printf("4) Module testing\n");
     int choose;
     scanf("%d", &choose);
     return choose;
@@ -337,4 +347,24 @@ void OutPutVector(struct Vector3* vector)
     printf("\n");
 
     return;
+}
+
+void moduleTesting(struct Vector3** data)
+{
+    struct Vector3* res;
+    data[0] = VectorFrom(ringinfo, testModule());
+    data[1] = VectorFrom(ringinfo, testModule());
+    printf("1-st vector:\n");
+    OutPutVector(data[0]);
+    printf("2-nd vector:\n");
+    OutPutVector(data[1]);
+
+    printf("sum:\n");
+    res = Sum(data[0], data[1]);
+    OutPutVector(res);
+
+    printf("Scalar of vectors = ");;
+    outputStream(Scalar(data[0], data[1]));
+    printf("\n");
+    exit(0);
 }

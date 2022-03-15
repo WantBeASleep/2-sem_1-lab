@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 //ringinfo buddy
 size_t sizeInt;
@@ -52,6 +53,27 @@ void *scalarInt(void **v1_values, void **v2_values)
     }
 
     return (void*)res;
+}
+
+void **IntTests()
+{
+    int *x, *y, *z;
+    x = (int*)malloc(sizeof(int));
+    y = (int*)malloc(sizeof(int));
+    z = (int*)malloc(sizeof(int));
+
+    srand(time(NULL));
+
+    *x = rand() % 100;
+    *y = rand() % 100;
+    *z = rand() % 100;
+
+    void **testValue = (void**)malloc(sizeof(int*));
+    testValue[0] = (void*)x;
+    testValue[1] = (void*)y;
+    testValue[2] = (void*)z;
+
+    return testValue;
 }
 
 void **IntParse()

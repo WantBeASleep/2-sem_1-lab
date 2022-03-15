@@ -11,4 +11,5 @@ void *scalarDouble(void**, void**);
 
 //input/output
 void **DoubleParse();
+void **DoubleTests();
 void DoubleOutputStream(void*);

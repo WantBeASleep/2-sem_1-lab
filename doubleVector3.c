@@ -54,6 +54,25 @@ void *scalarDouble(void **v1_values, void **v2_values)
     return (void*)res;
 }
 
+void **DoubleTests()
+{
+    double *x, *y, *z;
+    x = (double*)malloc(sizeof(double));
+    y = (double*)malloc(sizeof(double));
+    z = (double*)malloc(sizeof(double));
+
+    *x = 1.0;
+    *y = 2.0;
+    *z = 3.0;
+
+    void **testValue = (void**)malloc(sizeof(double*));
+    testValue[0] = (void*)x;
+    testValue[1] = (void*)y;
+    testValue[2] = (void*)z;
+
+    return testValue;
+}
+
 void **DoubleParse()
 {
     double *x, *y, *z;

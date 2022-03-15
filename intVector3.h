@@ -11,4 +11,5 @@ void *scalarInt(void**, void**);
 
 //input/output
 void **IntParse();
+void **IntTests();
 void IntOutputStream(void*);
